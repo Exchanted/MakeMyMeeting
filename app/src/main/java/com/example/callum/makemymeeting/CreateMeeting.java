@@ -15,14 +15,18 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -69,6 +73,8 @@ public class CreateMeeting extends AppCompatActivity
     Button btnDeleteMeeting;
     EditText editDeleteID;
 
+    LinearLayout linearLayout;
+
     int day, month, year, hour, minute;
     int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
 
@@ -93,13 +99,13 @@ public class CreateMeeting extends AppCompatActivity
 
         btnAdd = (Button) findViewById(R.id.btnAddAttendee);
         editAddAttendee = (EditText) findViewById(R.id.editTextAttendeeName);
-        listView = (ListView) findViewById(R.id.listAttendees);
+        //listView = (ListView) findViewById(R.id.listAttendees);
 
         btnEditMeetings = (Button) findViewById(R.id.btnEditMeetings);
         btnEditMeetings.setBackgroundColor(Color.WHITE);
         btnEditMeetings.setTextColor(Color.MAGENTA);
 
-        list = new ArrayList<String>();
+        /*list = new ArrayList<String>();
         arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),
                 android.R.layout.simple_list_item_multiple_choice, list);
 
@@ -137,6 +143,29 @@ public class CreateMeeting extends AppCompatActivity
                 }
                 positionchecker.clear();
                 arrayAdapter.notifyDataSetChanged();
+            }
+        });*/
+
+        linearLayout = (LinearLayout) findViewById(R.id.attendeeList);
+
+        final LayoutInflater layoutInflater = (LayoutInflater) CreateMeeting.this.getSystemService(LAYOUT_INFLATER_SERVICE);
+
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View myView = layoutInflater.inflate(R.layout.attendee_format_row, null);
+                TextView attendeeText = myView.findViewById(R.id.textAttendee);
+                attendeeText.setText(editAddAttendee.getText().toString());
+                linearLayout.addView(myView);
+
+                ImageView delete = myView.findViewById(R.id.imageDeleteButton);
+                delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        linearLayout.removeView((ViewGroup) view.getParent());
+                    }
+                });
+                editAddAttendee.setText("");
             }
         });
 
@@ -192,8 +221,6 @@ public class CreateMeeting extends AppCompatActivity
         RemoveData();
 
         editMeeting = (EditText) findViewById(R.id.editMeeting);
-
-
 
         editDeleteID = (EditText) findViewById(R.id.deleteMeeting);
 
