@@ -3,6 +3,8 @@ package com.example.callum.makemymeeting;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,6 +28,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -35,10 +42,13 @@ public class CreateMeeting extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
+    DBHelper myDb;
+
     Button btnAdd;
     Button btnTime;
-    Button btnCreateMeeting;
-    EditText editAddAttendee;
+
+    TextView showAddress;
+
     TextView showTime;
     TextView showDate;
     ListView listView;
@@ -49,6 +59,16 @@ public class CreateMeeting extends AppCompatActivity
     TextView myNotes;
     Button btnSaveNotes;
 
+    EditText editMeetingName;
+    EditText editAddAttendee;
+    Button btnCreateMeeting;
+
+    Button btnEditMeetings;
+    EditText editMeeting;
+
+    Button btnDeleteMeeting;
+    EditText editDeleteID;
+
     int day, month, year, hour, minute;
     int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
 
@@ -57,9 +77,27 @@ public class CreateMeeting extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_meeting);
 
+        btnCreateMeeting = (Button) findViewById(R.id.btnCreateMeeting);
+        btnCreateMeeting.setBackgroundColor(Color.WHITE);
+        btnCreateMeeting.setTextColor(Color.MAGENTA);
+
+        btnDeleteMeeting = (Button) findViewById(R.id.btnDeleteMeetings);
+        btnDeleteMeeting.setBackgroundColor(Color.WHITE);
+        btnDeleteMeeting.setTextColor(Color.MAGENTA);
+
+        myDb = new DBHelper(this);
+
+        AddData();
+
+        editMeetingName = (EditText) findViewById(R.id.editTextMeetingName);
+
         btnAdd = (Button) findViewById(R.id.btnAddAttendee);
         editAddAttendee = (EditText) findViewById(R.id.editTextAttendeeName);
         listView = (ListView) findViewById(R.id.listAttendees);
+
+        btnEditMeetings = (Button) findViewById(R.id.btnEditMeetings);
+        btnEditMeetings.setBackgroundColor(Color.WHITE);
+        btnEditMeetings.setTextColor(Color.MAGENTA);
 
         list = new ArrayList<String>();
         arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),
@@ -132,15 +170,32 @@ public class CreateMeeting extends AppCompatActivity
             }
         });
 
-        btnCreateMeeting = (Button) findViewById(R.id.btnCreateMeeting);
+        showAddress = (TextView) findViewById(R.id.selectedLocation);
 
-        btnCreateMeeting.setOnClickListener(new View.OnClickListener() {
+        PlaceAutocompleteFragment fragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        fragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
-            public void onClick(View view) {
-                Intent i = new Intent (CreateMeeting.this, MapsActivity.class);
-                startActivity(i);
+            public void onPlaceSelected(Place place) {
+                String placeDetails = (String) place.getAddress();
+                showAddress.setText(placeDetails);
+            }
+
+            @Override
+            public void onError(Status status) {
+
             }
         });
+
+        UpdateData();
+        RemoveData();
+
+        editMeeting = (EditText) findViewById(R.id.editMeeting);
+
+
+
+        editDeleteID = (EditText) findViewById(R.id.deleteMeeting);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -153,6 +208,60 @@ public class CreateMeeting extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public void RemoveData() {
+        btnDeleteMeeting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Integer deletedRows = myDb.deleteData(editDeleteID.getText().toString());
+                if (deletedRows > 0)
+                    Toast.makeText(CreateMeeting.this, "Meeting Deleted", Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(CreateMeeting.this, "Meeting Not Deleted", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void UpdateData() {
+        btnEditMeetings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean isUpdated = myDb.updateData(editMeeting.getText().toString(),
+                        editMeetingName.getText().toString(),
+                        list.toString(),
+                        showDate.getText().toString(),
+                        showTime.getText().toString(),
+                        editNotes.getText().toString(),
+                        showAddress.getText().toString());
+
+                if(isUpdated == true)
+                    Toast.makeText(CreateMeeting.this, "Meeting Updated Correctly", Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(CreateMeeting.this, "Enter Correct Meeting Format", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void AddData() {
+        btnCreateMeeting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean isInserted = myDb.insertData(editMeetingName.getText().toString(),
+                        list.toString(),
+                        showDate.getText().toString(),
+                        showTime.getText().toString(),
+                        myNotes.getText().toString(),
+                        showAddress.getText().toString());
+
+                finish();
+
+                if(isInserted == true)
+                    Toast.makeText(CreateMeeting.this, "Meeting Inserted Correctly", Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(CreateMeeting.this, "Enter Correct Meeting Format", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override

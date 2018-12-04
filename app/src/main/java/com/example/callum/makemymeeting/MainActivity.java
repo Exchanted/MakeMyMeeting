@@ -1,9 +1,12 @@
 package com.example.callum.makemymeeting;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -15,11 +18,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    Button btnLoadMeetings;
+    DBHelper myDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +52,49 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        btnLoadMeetings = (Button) findViewById(R.id.btnLoadMeetings);
+        btnLoadMeetings.setBackgroundColor(Color.WHITE);
+        btnLoadMeetings.setTextColor(Color.MAGENTA);
+
+        myDb = new DBHelper(this);
+
+        viewAll();
+    }
+
+    public void viewAll() {
+        btnLoadMeetings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               Cursor res =  myDb.getAllData();
+               if(res.getCount() == 0) {
+                   //Show some message
+                   showMeeting("Error", "No meetings found");
+                   return;
+               }
+
+               StringBuffer buffer = new StringBuffer();
+               while(res.moveToNext()) {
+                   buffer.append("ID: " + res.getString(0)+"\n");
+                   buffer.append("Meeting Name: " + res.getString(1)+"\n");
+                   buffer.append("Attendees: " + res.getString(2)+"\n");
+                   buffer.append("Date: " + res.getString(3)+"\n");
+                   buffer.append("Time: " + res.getString(4)+"\n");
+                   buffer.append("Notes: " + res.getString(5)+"\n");
+                   buffer.append("Location: " + res.getString(6)+"\n\n");
+               }
+
+               //Show all data
+                showMeeting("List of your Meetings", buffer.toString());
+            }
+        });
+    }
+
+    public void showMeeting(String title, String meeting) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(meeting);
+        builder.show();
     }
 
     public void openCreateMeeting() {

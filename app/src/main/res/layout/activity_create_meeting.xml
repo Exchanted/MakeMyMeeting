@@ -80,6 +80,7 @@
                     android:id="@+id/editTextAttendeeName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="Enter Attendee Here"
                     android:inputType="textPersonName" />
 
             </LinearLayout>
@@ -99,9 +100,11 @@
                 <ListView
                     android:id="@+id/listAttendees"
                     android:layout_width="wrap_content"
-                    android:layout_height="100dp"
+                    android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/btnAddAttendee"
-                    android:choiceMode="multipleChoice"></ListView>
+                    android:choiceMode="multipleChoice">
+
+                </ListView>
 
             </LinearLayout>
 
@@ -215,11 +218,124 @@
                 android:layout_gravity="center"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btnCreateMeeting"
+                <TextView
+                    android:id="@+id/selectedLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Create Meeting" />
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nice Job! Now Create the Meeting! "
+                    android:paddingTop="10dp"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:textSize="15sp"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnCreateMeeting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Create Meeting"
+                    />
+
+        </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Want to edit a Meeting? "
+                    android:paddingTop="10dp"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:textSize="18sp"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Click Load Meetings to Find Your Meetings Unique ID "
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:textSize="12sp"
+                    android:gravity="center"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:id="@+id/editMeeting"
+                    android:hint="Enter Meeting ID to Edit Here" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Perform Edits to Meeting"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/btnEditMeetings"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Want to Delete an Item? Enter the Meeting ID Below "
+                    android:paddingTop="10dp"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:textSize="12sp"
+                    android:gravity="center"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:id="@+id/deleteMeeting"
+                    android:hint="Enter Meeting ID to Delete Here" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Delete Meeting"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/btnDeleteMeetings"/>
+
             </LinearLayout>
 
         </LinearLayout>
