@@ -58,9 +58,6 @@ public class CreateMeeting extends AppCompatActivity
 
     TextView showTime;
     TextView showDate;
-    ListView listView;
-    ArrayList<String> list;
-    ArrayAdapter<String> arrayAdapter;
 
     EditText editNotes;
     TextView myNotes;
@@ -102,7 +99,6 @@ public class CreateMeeting extends AppCompatActivity
 
         btnAdd = (Button) findViewById(R.id.btnAddAttendee);
         editAddAttendee = (EditText) findViewById(R.id.editTextAttendeeName);
-        //listView = (ListView) findViewById(R.id.listAttendees);
 
         btnEditMeetings = (Button) findViewById(R.id.btnEditMeetings);
         btnEditMeetings.setBackgroundColor(Color.WHITE);
@@ -133,8 +129,6 @@ public class CreateMeeting extends AppCompatActivity
                 } else {
                     Toast.makeText(CreateMeeting.this, "Add an Attendee", Toast.LENGTH_LONG).show();
                 }
-
-
             }
         });
 
@@ -227,8 +221,6 @@ public class CreateMeeting extends AppCompatActivity
                 if (attendeesString.length() > 0) {
                     attendeesString = attendeesString.substring(0, attendees.length() - 2);
                 }
-
-                Log.d("Atendee", attendeesString);
 
                 boolean isInserted = myDb.insertData(editMeetingName.getText().toString(),
                         attendeesString,
@@ -342,6 +334,9 @@ public class CreateMeeting extends AppCompatActivity
             startActivity(i);
         } else if (id == R.id.location_history) {
             Intent i = new Intent(this, LocationHistory.class);
+            startActivity(i);
+        } else if (id == R.id.navigate_home) {
+            Intent i = new Intent(this, MainActivity.class);
             startActivity(i);
         }
 

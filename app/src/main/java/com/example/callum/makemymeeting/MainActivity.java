@@ -150,6 +150,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.location_history) {
             Intent i = new Intent(this, LocationHistory.class);
             startActivity(i);
+        } else if (id == R.id.navigate_home) {
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
