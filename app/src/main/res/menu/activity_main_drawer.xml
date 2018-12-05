@@ -18,7 +18,7 @@
         <item
             android:id="@+id/location_history"
             android:icon="@drawable/ic_pin_drop_black_24dp"
-            android:title="Meeting Locations" />
+            android:title="Search Meeting Address" />
 
         <item
             android:id="@+id/meeting_history"
