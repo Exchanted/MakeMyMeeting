@@ -37,7 +37,7 @@
         <activity
             android:name=".MeetingHistory"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".LocationHistory"
+        <activity android:name=".MeetingLocations"
             android:configChanges="screenLayout|orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar"/>
         <!--

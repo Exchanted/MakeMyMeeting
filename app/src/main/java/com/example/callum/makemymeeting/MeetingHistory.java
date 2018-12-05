@@ -43,7 +43,7 @@ public class MeetingHistory extends AppCompatActivity
                 Intent i = new Intent(this, MeetingHistory.class);
                 startActivity(i);
             } else if (id == R.id.location_history) {
-                Intent i = new Intent(this, LocationHistory.class);
+                Intent i = new Intent(this, MeetingLocations.class);
                 startActivity(i);
             } else if (id == R.id.navigate_home) {
                 Intent i = new Intent(this, MainActivity.class);

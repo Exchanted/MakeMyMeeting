@@ -5,9 +5,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,13 +16,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.EditText;
-
-import com.google.android.gms.common.api.GoogleApiClient;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    Button btnCreateMeeting;
     Button btnLoadMeetings;
     DBHelper myDb;
 
@@ -56,34 +52,50 @@ public class MainActivity extends AppCompatActivity
         btnLoadMeetings.setBackgroundColor(Color.WHITE);
         btnLoadMeetings.setTextColor(Color.MAGENTA);
 
+        btnCreateMeeting = (Button) findViewById(R.id.btnCreateMeeting);
+        btnCreateMeeting.setBackgroundColor(Color.WHITE);
+        btnCreateMeeting.setTextColor(Color.MAGENTA);
+
         myDb = new DBHelper(this);
 
+        openCreate();
+
         viewAll();
+    }
+
+    public void openCreate() {
+        btnCreateMeeting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, CreateMeeting.class);
+                startActivity(i);
+            }
+        });
     }
 
     public void viewAll() {
         btnLoadMeetings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               Cursor res =  myDb.getAllData();
-               if(res.getCount() == 0) {
-                   //Show some message
-                   showMeeting("Error", "No meetings found");
-                   return;
-               }
+                Cursor res = myDb.getAllData();
+                if (res.getCount() == 0) {
+                    //Show some message
+                    showMeeting("Error", "No meetings found");
+                    return;
+                }
 
-               StringBuffer buffer = new StringBuffer();
-               while(res.moveToNext()) {
-                   buffer.append("ID: " + res.getString(0)+"\n");
-                   buffer.append("Meeting Name: " + res.getString(1)+"\n");
-                   buffer.append("Attendees: " + res.getString(2)+"\n");
-                   buffer.append("Date: " + res.getString(3)+"\n");
-                   buffer.append("Time: " + res.getString(4)+"\n");
-                   buffer.append("Notes: " + res.getString(5)+"\n");
-                   buffer.append("Location: " + res.getString(6)+"\n\n");
-               }
+                StringBuffer buffer = new StringBuffer();
+                while (res.moveToNext()) {
+                    buffer.append("ID: " + res.getString(0) + "\n");
+                    buffer.append("Meeting Name: " + res.getString(1) + "\n");
+                    buffer.append("Attendees: " + res.getString(2) + "\n");
+                    buffer.append("Date: " + res.getString(3) + "\n");
+                    buffer.append("Time: " + res.getString(4) + "\n");
+                    buffer.append("Notes: " + res.getString(5) + "\n");
+                    buffer.append("Location: " + res.getString(6) + "\n\n");
+                }
 
-               //Show all data
+                //Show all data
                 showMeeting("List of your Meetings", buffer.toString());
             }
         });
@@ -148,7 +160,7 @@ public class MainActivity extends AppCompatActivity
             Intent i = new Intent(this, MeetingHistory.class);
             startActivity(i);
         } else if (id == R.id.location_history) {
-            Intent i = new Intent(this, LocationHistory.class);
+            Intent i = new Intent(this, MeetingLocations.class);
             startActivity(i);
         } else if (id == R.id.navigate_home) {
             Intent i = new Intent(this, MainActivity.class);
