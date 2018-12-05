@@ -14,7 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +30,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -105,47 +108,6 @@ public class CreateMeeting extends AppCompatActivity
         btnEditMeetings.setBackgroundColor(Color.WHITE);
         btnEditMeetings.setTextColor(Color.MAGENTA);
 
-        /*list = new ArrayList<String>();
-        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),
-                android.R.layout.simple_list_item_multiple_choice, list);
-
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (editAddAttendee.getText().toString().trim().length() < 1) {
-                    Toast.makeText(CreateMeeting.this, "Please enter a name",
-                            Toast.LENGTH_LONG).show();
-                } else {
-
-                    String attendees = editAddAttendee.getText().toString();
-                    list.add(attendees);
-                    listView.setAdapter(arrayAdapter);
-                    Collections.reverse(list);
-                    editAddAttendee.setText("");
-                    arrayAdapter.notifyDataSetChanged();
-                }
-            }
-        });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                SparseBooleanArray positionchecker = listView.getCheckedItemPositions();
-
-                int count = listView.getCount();
-
-                for (int item = count - 1; item >= 0; item--) {
-
-                    if (positionchecker.get(item)) {
-                        arrayAdapter.remove(list.get(item));
-                    }
-                }
-                positionchecker.clear();
-                arrayAdapter.notifyDataSetChanged();
-            }
-        });*/
-
         linearLayout = (LinearLayout) findViewById(R.id.attendeeList);
 
         final LayoutInflater layoutInflater = (LayoutInflater) CreateMeeting.this.getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -156,16 +118,23 @@ public class CreateMeeting extends AppCompatActivity
                 View myView = layoutInflater.inflate(R.layout.attendee_format_row, null);
                 TextView attendeeText = myView.findViewById(R.id.textAttendee);
                 attendeeText.setText(editAddAttendee.getText().toString());
-                linearLayout.addView(myView);
 
-                ImageView delete = myView.findViewById(R.id.imageDeleteButton);
-                delete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        linearLayout.removeView((ViewGroup) view.getParent());
-                    }
-                });
-                editAddAttendee.setText("");
+                if(editAddAttendee.length() != 0) {
+                    linearLayout.addView(myView);
+
+                    ImageView delete = myView.findViewById(R.id.imageDeleteButton);
+                    delete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            linearLayout.removeView((ViewGroup) view.getParent());
+                        }
+                    });
+                    editAddAttendee.setText("");
+                } else {
+                    Toast.makeText(CreateMeeting.this, "Add an Attendee", Toast.LENGTH_LONG).show();
+                }
+
+
             }
         });
 
@@ -235,17 +204,45 @@ public class CreateMeeting extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
-    public void RemoveData() {
-        btnDeleteMeeting.setOnClickListener(new View.OnClickListener() {
+    public void AddData() {
+        btnCreateMeeting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Integer deletedRows = myDb.deleteData(editDeleteID.getText().toString());
-                if (deletedRows > 0)
-                    Toast.makeText(CreateMeeting.this, "Meeting Deleted", Toast.LENGTH_LONG).show();
+
+                StringBuilder attendees = new StringBuilder();
+
+                int count = linearLayout.getChildCount();
+                RelativeLayout relativeLayoutView = null;
+                for(int i=0; i<count; i++) {
+                    relativeLayoutView = (RelativeLayout) linearLayout.getChildAt(i);
+                    TextView textView = (TextView) relativeLayoutView.findViewById(R.id.textAttendee);
+                    attendees.append(textView.getText().toString()).append(", ");
+                }
+
+                String attendeesString = attendees.toString();
+
+                if (attendeesString.length() > 0) {
+                    attendeesString = attendeesString.substring(0, attendees.length() - 2);
+                }
+
+                Log.d("Atendee", attendeesString);
+
+                boolean isInserted = myDb.insertData(editMeetingName.getText().toString(),
+                        attendeesString,
+                        showDate.getText().toString(),
+                        showTime.getText().toString(),
+                        myNotes.getText().toString(),
+                        showAddress.getText().toString());
+
+                finish();
+
+                if (isInserted == true)
+                    Toast.makeText(CreateMeeting.this, "Meeting Inserted Correctly", Toast.LENGTH_LONG).show();
                 else
-                    Toast.makeText(CreateMeeting.this, "Meeting Not Deleted", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CreateMeeting.this, "Enter Correct Meeting Format", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -254,15 +251,34 @@ public class CreateMeeting extends AppCompatActivity
         btnEditMeetings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                StringBuilder attendees = new StringBuilder();
+
+                int count = linearLayout.getChildCount();
+                RelativeLayout relativeLayoutView = null;
+                for(int i=0; i<count; i++) {
+                    relativeLayoutView = (RelativeLayout) linearLayout.getChildAt(i);
+                    TextView textView = (TextView) relativeLayoutView.findViewById(R.id.textAttendee);
+                    attendees.append(textView.getText().toString()).append(", ");
+                }
+
+                String attendeesString = attendees.toString();
+
+                if (attendeesString.length() > 0) {
+                    attendeesString = attendeesString.substring(0, attendees.length() - 2);
+                }
+
                 boolean isUpdated = myDb.updateData(editMeeting.getText().toString(),
                         editMeetingName.getText().toString(),
-                        list.toString(),
+                        attendeesString,
                         showDate.getText().toString(),
                         showTime.getText().toString(),
                         editNotes.getText().toString(),
                         showAddress.getText().toString());
 
-                if(isUpdated == true)
+                finish();
+
+                if (isUpdated == true)
                     Toast.makeText(CreateMeeting.this, "Meeting Updated Correctly", Toast.LENGTH_LONG).show();
                 else
                     Toast.makeText(CreateMeeting.this, "Enter Correct Meeting Format", Toast.LENGTH_LONG).show();
@@ -270,23 +286,18 @@ public class CreateMeeting extends AppCompatActivity
         });
     }
 
-    public void AddData() {
-        btnCreateMeeting.setOnClickListener(new View.OnClickListener() {
+    public void RemoveData() {
+        btnDeleteMeeting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean isInserted = myDb.insertData(editMeetingName.getText().toString(),
-                        list.toString(),
-                        showDate.getText().toString(),
-                        showTime.getText().toString(),
-                        myNotes.getText().toString(),
-                        showAddress.getText().toString());
+                Integer deletedRows = myDb.deleteData(editDeleteID.getText().toString());
 
                 finish();
 
-                if(isInserted == true)
-                    Toast.makeText(CreateMeeting.this, "Meeting Inserted Correctly", Toast.LENGTH_LONG).show();
+                if (deletedRows > 0)
+                    Toast.makeText(CreateMeeting.this, "Meeting Deleted", Toast.LENGTH_LONG).show();
                 else
-                    Toast.makeText(CreateMeeting.this, "Enter Correct Meeting Format", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CreateMeeting.this, "Meeting Not Deleted", Toast.LENGTH_LONG).show();
             }
         });
     }
