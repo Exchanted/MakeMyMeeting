@@ -3,39 +3,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
+    <!--General side menu-->
+
     <group android:checkableBehavior="single">
 
         <item
             android:id="@+id/navigate_home"
             android:icon="@drawable/ic_home_black_24dp"
-            android:title="Home" />
+            android:title="@string/navigate_home" />
 
         <item
             android:id="@+id/create_meeting"
             android:icon="@drawable/ic_fiber_new_black_24dp"
-            android:title="Create/Edit/Delete Meeting" />
+            android:title="@string/_crud" />
 
         <item
             android:id="@+id/location_history"
             android:icon="@drawable/ic_pin_drop_black_24dp"
-            android:title="Search Meeting Address" />
+            android:title="@string/search_address"/>
 
         <item
             android:id="@+id/meeting_history"
             android:icon="@drawable/ic_history_black_24dp"
-            android:title="Previous Meetings" />
+            android:title="@string/previous_meetings" />
     </group>
 
-    <item android:title="Information">
+    <!--Bottom submenu-->
+
+    <item android:title="@string/_information">
         <menu>
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Build: Alpha" />
+                android:title="@string/build_alpha" />
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"
-                android:title="908031@swansea.ac.uk" />
+                android:title="@string/email" />
         </menu>
     </item>
 

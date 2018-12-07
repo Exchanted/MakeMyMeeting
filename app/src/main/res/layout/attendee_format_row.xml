@@ -7,10 +7,13 @@
     android:paddingRight="25dp"
     android:paddingLeft="25dp">
 
+    <!--Layout of rows inserted into attendee list-->
+    <!--Added to inflater layout with imageview acting as delete-->
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Attendee"
+        android:text="@string/_attendee"
         android:layout_centerVertical="true"
         android:id="@+id/textAttendee"/>
 

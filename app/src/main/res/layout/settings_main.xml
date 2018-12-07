@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".SettingsMain">
 
+    <!--Setting menu layout-->
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/db1_root"
         android:layout_width="match_parent"
@@ -17,9 +19,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Edit Your Settings:"
+            android:text="@string/edit_settings"
             android:layout_weight="0"
             android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <!--Layout for back button-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,7 +38,7 @@
                 android:layout_width="145dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center"
-                android:text="Go Back" />
+                android:text="@string/go_back" />
 
         </LinearLayout>
 

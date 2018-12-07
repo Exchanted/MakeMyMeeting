@@ -33,32 +33,43 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 import java.util.Calendar;
 
+/**
+ * This class is used to create meetings based off an ID system
+ * Here the user can create a meeting to be place in the database are perform CRUD operations
+ * Also provided is the navigation menu to browse between activities
+ */
+
 public class CreateMeeting extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+
+    /**
+     * Create a database object to perform CRUD operations on
+     * Create XML Button objects
+     * Create XML TextView objects
+     * Create XML EditText objects
+     * Create LinearLayout for attendee LayoutInflater
+     * Create multiple ints for storing day / time
+     */
 
     DBHelper myDb;
 
     Button btnAdd;
     Button btnTime;
+    Button btnDeleteMeeting;
+    Button btnCreateMeeting;
+    Button btnSaveNotes;
+    Button btnEditMeetings;
 
     TextView showAddress;
-
     TextView showTime;
     TextView showDate;
+    TextView myNotes;
 
     EditText editNotes;
-    TextView myNotes;
-    Button btnSaveNotes;
-
     EditText editMeetingName;
     EditText editAddAttendee;
-    Button btnCreateMeeting;
-
-    Button btnEditMeetings;
     EditText editMeeting;
-
-    Button btnDeleteMeeting;
     EditText editDeleteID;
 
     LinearLayout linearLayout;
@@ -66,36 +77,66 @@ public class CreateMeeting extends AppCompatActivity
     int day, month, year, hour, minute;
     int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
 
+    /**
+     * {@inheritDoc}
+     * @param savedInstanceState - Get phone state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_meeting);
 
+        /**
+         * Instantiating XML objects along with formatting
+         */
         btnCreateMeeting = (Button) findViewById(R.id.btnCreateMeeting);
         btnCreateMeeting.setBackgroundColor(Color.WHITE);
         btnCreateMeeting.setTextColor(Color.MAGENTA);
-
         btnDeleteMeeting = (Button) findViewById(R.id.btnDeleteMeetings);
         btnDeleteMeeting.setBackgroundColor(Color.WHITE);
         btnDeleteMeeting.setTextColor(Color.MAGENTA);
-
-        myDb = new DBHelper(this);
-
-        AddData();
-
-        editMeetingName = (EditText) findViewById(R.id.editTextMeetingName);
-
-        btnAdd = (Button) findViewById(R.id.btnAddAttendee);
-        editAddAttendee = (EditText) findViewById(R.id.editTextAttendeeName);
-
+        btnTime = (Button) findViewById(R.id.btnTime);
         btnEditMeetings = (Button) findViewById(R.id.btnEditMeetings);
         btnEditMeetings.setBackgroundColor(Color.WHITE);
         btnEditMeetings.setTextColor(Color.MAGENTA);
+        btnAdd = (Button) findViewById(R.id.btnAddAttendee);
+        btnSaveNotes = (Button) findViewById(R.id.btnSaveNotes);
 
+        showTime = (TextView) findViewById(R.id.textTime);
+        showDate = (TextView) findViewById(R.id.textHour);
+        myNotes = (TextView) findViewById(R.id.myNotes);
+        showAddress = (TextView) findViewById(R.id.selectedLocation);
+
+        editMeeting = (EditText) findViewById(R.id.editMeeting);
+        editDeleteID = (EditText) findViewById(R.id.deleteMeeting);
+        editMeetingName = (EditText) findViewById(R.id.editTextMeetingName);
+        editAddAttendee = (EditText) findViewById(R.id.editTextAttendeeName);
+        editNotes = (EditText) findViewById(R.id.editNotes);
+
+        /**
+         * Creating DBHelper
+         */
+        myDb = new DBHelper(this);
+
+        /**
+         * Attendee LayoutInflater instantiation
+         */
         linearLayout = (LinearLayout) findViewById(R.id.attendeeList);
-
         final LayoutInflater layoutInflater = (LayoutInflater) CreateMeeting.this.getSystemService(LAYOUT_INFLATER_SERVICE);
 
+        /**
+         * Create methods below and allow them to work when activity created
+         */
+        AddData();
+        UpdateData();
+        RemoveData();
+
+        /**
+         * Adding attendees to list
+         * Check if editText is blank, if not blank add to view within the inflater
+         * Using image to remove from the list
+         * Reset edittext upon successful entry
+         */
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,7 +144,7 @@ public class CreateMeeting extends AppCompatActivity
                 TextView attendeeText = myView.findViewById(R.id.textAttendee);
                 attendeeText.setText(editAddAttendee.getText().toString());
 
-                if(editAddAttendee.length() != 0) {
+                if (editAddAttendee.length() != 0) {
                     linearLayout.addView(myView);
 
                     ImageView delete = myView.findViewById(R.id.imageDeleteButton);
@@ -120,10 +161,10 @@ public class CreateMeeting extends AppCompatActivity
             }
         });
 
-        btnTime = (Button) findViewById(R.id.btnTime);
-        showTime = (TextView) findViewById(R.id.textTime);
-        showDate = (TextView) findViewById(R.id.textHour);
-
+        /**
+         * Select the Date and Time through button being pressed
+         * Get current date and time from phone incase meetings created now
+         */
         btnTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,11 +179,12 @@ public class CreateMeeting extends AppCompatActivity
             }
         });
 
-        btnSaveNotes = (Button) findViewById(R.id.btnSaveNotes);
-        editNotes = (EditText) findViewById(R.id.editNotes);
-        myNotes = (TextView) findViewById(R.id.myNotes);
-
         btnSaveNotes.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Save notes into TextView
+             * @param view - Loads edittext information entered into TextView to be saved upon
+             *             meeting creation
+             */
             @Override
             public void onClick(View view) {
                 String notes = editNotes.getText().toString();
@@ -150,31 +192,36 @@ public class CreateMeeting extends AppCompatActivity
             }
         });
 
-        showAddress = (TextView) findViewById(R.id.selectedLocation);
-
+        /**
+         * Let user select location of meeting from Places API
+         */
         PlaceAutocompleteFragment fragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
         fragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            /**
+             * Load selected place into TextView
+             * @param place - Selected place object from Place API
+             */
             @Override
             public void onPlaceSelected(Place place) {
                 String placeDetails = (String) place.getAddress();
                 showAddress.setText(placeDetails);
             }
 
+            /**
+             * Used to throw any error from Place API
+             * @param status
+             */
             @Override
             public void onError(Status status) {
-
+                Toast.makeText(CreateMeeting.this, "Please enter location again", Toast.LENGTH_LONG).show();
             }
         });
 
-        UpdateData();
-        RemoveData();
-
-        editMeeting = (EditText) findViewById(R.id.editMeeting);
-
-        editDeleteID = (EditText) findViewById(R.id.deleteMeeting);
-
+        /**
+         * Create side menu drawer
+         */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -189,16 +236,22 @@ public class CreateMeeting extends AppCompatActivity
 
     }
 
+    /**
+     * When create button pressed, load all data selected and insert into Database
+     *      as a new row entry
+     */
     public void AddData() {
         btnCreateMeeting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                /**
+                 * Build list of attendees to be placed into database
+                 */
                 StringBuilder attendees = new StringBuilder();
-
                 int count = linearLayout.getChildCount();
                 RelativeLayout relativeLayoutView = null;
-                for(int i=0; i<count; i++) {
+                for (int i = 0; i < count; i++) {
                     relativeLayoutView = (RelativeLayout) linearLayout.getChildAt(i);
                     TextView textView = (TextView) relativeLayoutView.findViewById(R.id.textAttendee);
                     attendees.append(textView.getText().toString()).append(", ");
@@ -206,10 +259,17 @@ public class CreateMeeting extends AppCompatActivity
 
                 String attendeesString = attendees.toString();
 
+                /**
+                 * Remove extra formatting ", " from attendee being added to database
+                 */
                 if (attendeesString.length() > 0) {
                     attendeesString = attendeesString.substring(0, attendees.length() - 2);
                 }
 
+                /**
+                 * Get entered fields and place into database
+                 * Throw toast of success or fail to notify user.
+                 */
                 boolean isInserted = myDb.insertData(editMeetingName.getText().toString(),
                         attendeesString,
                         showDate.getText().toString(),
@@ -219,6 +279,9 @@ public class CreateMeeting extends AppCompatActivity
 
                 finish();
 
+                /**
+                 * Success / Error message of successful database placement
+                 */
                 if (isInserted == true)
                     Toast.makeText(CreateMeeting.this, "Meeting Inserted Correctly", Toast.LENGTH_LONG).show();
                 else
@@ -227,6 +290,10 @@ public class CreateMeeting extends AppCompatActivity
         });
     }
 
+    /**
+     * Edit rows of create a meeting then select a meeting ID to overwrite in the database
+     * Check ID exists in database and overwrite existing information fields
+     */
     public void UpdateData() {
         btnEditMeetings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,7 +303,7 @@ public class CreateMeeting extends AppCompatActivity
 
                 int count = linearLayout.getChildCount();
                 RelativeLayout relativeLayoutView = null;
-                for(int i=0; i<count; i++) {
+                for (int i = 0; i < count; i++) {
                     relativeLayoutView = (RelativeLayout) linearLayout.getChildAt(i);
                     TextView textView = (TextView) relativeLayoutView.findViewById(R.id.textAttendee);
                     attendees.append(textView.getText().toString()).append(", ");
@@ -266,6 +333,9 @@ public class CreateMeeting extends AppCompatActivity
         });
     }
 
+    /**
+     * Remove data from database row where ID matches an ID within the database
+     */
     public void RemoveData() {
         btnDeleteMeeting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -282,6 +352,13 @@ public class CreateMeeting extends AppCompatActivity
         });
     }
 
+    /**
+     * {@inheritDoc}
+     * @param datePicker - Select Date - loaded with 3 parameters
+     * @param i - Year parameter
+     * @param i1 - Month parameter
+     * @param i2 - Day parameter
+     */
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         yearFinal = i;
@@ -299,16 +376,30 @@ public class CreateMeeting extends AppCompatActivity
 
     }
 
+    /**
+     * {@inheritDoc}
+     * @param timePicker - Select Time - loaded with 2 parameters
+     * @param i - Hour parameter (24 hour)
+     * @param i1 - Minute parameter
+     */
     @Override
     public void onTimeSet(TimePicker timePicker, int i, int i1) {
         hourFinal = i;
         minuteFinal = i1;
 
+        /**
+         * Load Date and Time into TextView to clarify to user what they selected
+         */
         showTime.setText("Day: " + dayFinal + "   " + "Month: " + monthFinal + "   " + "Year: " + yearFinal);
         showDate.setText("Hour(24): " + hourFinal + "  " + "Minute: " + minuteFinal);
 
     }
 
+    /**
+     * {@inheritDoc}
+     * @param item - Navigate to selected activity of side menu
+     * @return -  Selected activity
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.

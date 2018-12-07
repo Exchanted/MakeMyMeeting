@@ -9,6 +9,8 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
+    <!--Meeting History Layout with side menu-->
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -31,13 +33,17 @@
 
     </android.support.design.widget.AppBarLayout>
 
+        <!--Textview for title of activity-->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="History of Meetings" />
+            android:text="@string/history_meeting" />
 
     </LinearLayout>
+
+    <!--Side menu-->
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"

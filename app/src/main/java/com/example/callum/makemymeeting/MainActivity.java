@@ -17,17 +17,37 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+/**
+ * This class is used for the first activity presented on the application
+ * Here the user can navigate to create a meeting. load their meetings and view locations
+ * Also provided is the navigation menu to browse between activities
+ */
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    /**
+     * Creating the buttons
+     * Creating the Database object
+     */
     Button btnCreateMeeting;
     Button btnLoadMeetings;
     DBHelper myDb;
+
+    /**
+     * {@inheritDoc}
+     * @param savedInstanceState - Get phone state
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /*
+            Settings for navigation side menu
+         */
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -48,6 +68,10 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        /*
+            Instantiating the buttons along with formatting
+         */
+
         btnLoadMeetings = (Button) findViewById(R.id.btnLoadMeetings);
         btnLoadMeetings.setBackgroundColor(Color.WHITE);
         btnLoadMeetings.setTextColor(Color.MAGENTA);
@@ -56,13 +80,22 @@ public class MainActivity extends AppCompatActivity
         btnCreateMeeting.setBackgroundColor(Color.WHITE);
         btnCreateMeeting.setTextColor(Color.MAGENTA);
 
+        /*
+        Instantiating the Database
+         */
+
         myDb = new DBHelper(this);
 
+        /*
+        Calling methods below
+         */
         openCreate();
-
         viewAll();
     }
 
+    /**
+     * Navigate to CreateMeeting activity through button
+     */
     public void openCreate() {
         btnCreateMeeting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,10 +106,18 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * When load meetings button pressed, all meetings will be grabbed from the database
+     * and formatted with the StringBuffer
+     */
     public void viewAll() {
         btnLoadMeetings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                /*
+                Get rows from database
+                 */
                 Cursor res = myDb.getAllData();
                 if (res.getCount() == 0) {
                     //Show some message
@@ -84,6 +125,9 @@ public class MainActivity extends AppCompatActivity
                     return;
                 }
 
+                /*
+                Format rows being read from database
+                 */
                 StringBuffer buffer = new StringBuffer();
                 while (res.moveToNext()) {
                     buffer.append("ID: " + res.getString(0) + "\n");
@@ -95,12 +139,16 @@ public class MainActivity extends AppCompatActivity
                     buffer.append("Location: " + res.getString(6) + "\n\n");
                 }
 
-                //Show all data
+                //Show all meetings data
                 showMeeting("List of your Meetings", buffer.toString());
             }
         });
     }
 
+    /**
+     * @param title - Set the meetings display title
+     * @param meeting - Meeting object set as window message
+     */
     public void showMeeting(String title, String meeting) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
@@ -109,11 +157,18 @@ public class MainActivity extends AppCompatActivity
         builder.show();
     }
 
+    /**
+     * Navigate to CreateMeeting through fab button in bottom right
+     */
     public void openCreateMeeting() {
         Intent i = new Intent(this, CreateMeeting.class);
         startActivity(i);
     }
 
+    /**
+     *{@inheritDoc}
+     * On back presses, close side menu
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -124,6 +179,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param menu - Create the inflator side menu
+     * @return - true if menu has been opened and items added
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -131,6 +191,11 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param item - Navigate to the settings tab or selected activity
+     * @return - Navigate to selected intent of list
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -147,6 +212,11 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param item - Navigate to selected activity of side menu
+     * @return -  Selected activity
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

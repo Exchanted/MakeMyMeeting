@@ -10,6 +10,8 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <!--Layout for Main Activity along with instruction strings-->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="10dp"
-            android:text="Create a Meeting"/>
+            android:text="@string/create_meeting"/>
 
         <Button
             android:id="@+id/btnLoadMeetings"
@@ -29,13 +31,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="10dp"
-            android:text="Load Meetings" />
+            android:text="@string/load_meetings" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Want to Edit/Delete a meeting?"
+            android:text="@string/want_to_edit"
             android:textColor="@android:color/holo_blue_dark"
             android:textSize="18sp" />
 
@@ -43,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Press 'Load Meetings' to Get The ID to Perform Edits / Delete,"
+            android:text="@string/press_load"
             android:textColor="@android:color/holo_blue_dark"
             android:textSize="12sp" />
 
@@ -51,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Then Proceed to Create a Meeting and Scroll Down"
+            android:text="@string/procees_scroll"
             android:textColor="@android:color/holo_blue_dark"
             android:textSize="12sp" />
 

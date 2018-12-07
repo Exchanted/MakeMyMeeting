@@ -9,9 +9,13 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
+    <!--Scroll view to allow user to scroll down to create/edit/delete buttons-->
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
+
+        <!--Layout of create meeting and side menu-->
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -40,9 +44,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Enter Details Below to Create a Meeting"
+                android:text="@string/enter_create_meeting"
                 android:textColor="@android:color/holo_blue_dark"
                 android:textSize="18sp" />
+
+            <!--Layout of entering a meeting name-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -53,7 +59,7 @@
                     android:id="@+id/textViewMeetingName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Meeting Name:"
+                    android:text="@string/meeting_name"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <EditText
@@ -64,6 +70,8 @@
 
             </LinearLayout>
 
+            <!--Layout of adding attendees-->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -73,17 +81,19 @@
                     android:id="@+id/textViewMeeingAttendees"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Add Attendee:"
+                    android:text="@string/add_attendee"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <EditText
                     android:id="@+id/editTextAttendeeName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Enter Attendee Here"
+                    android:hint="@string/enter_add_attendee"
                     android:inputType="textPersonName" />
 
             </LinearLayout>
+
+            <!--Layout of adding attendees button-->
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -94,10 +104,12 @@
                     android:id="@+id/btnAddAttendee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Add Attendee"
+                    android:text="@string/add_attendee"
                     app:layout_constraintBottom_toTopOf="@id/timeanddate" />
 
             </LinearLayout>
+
+            <!--Layout for attendee list-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -106,6 +118,8 @@
                 android:id="@+id/attendeeList">
 
             </LinearLayout>
+
+            <!--Layout for text for time and date-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -116,12 +130,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Select Time and Date of Meeting"
+                    android:text="@string/enter_time_date"
                     android:textColor="@android:color/holo_blue_dark"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="@+id/btnAddAttendee" />
 
             </LinearLayout>
+
+            <!--Layout for selecting time and date-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -133,9 +149,11 @@
                     android:id="@+id/btnTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Select Date and Time" />
+                    android:text="@string/select_time_date" />
 
             </LinearLayout>
+
+            <!--Layout for time and date text-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -147,10 +165,12 @@
                     android:id="@+id/textTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Selected Date and Time"
+                    android:text="@string/selected_time_date"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </LinearLayout>
+
+            <!--Layout for displaying time selected-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -166,6 +186,8 @@
 
             </LinearLayout>
 
+            <!--Layout for notes-->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -175,12 +197,12 @@
                     android:id="@+id/btnSaveNotes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Save Notes" />
+                    android:text="@string/save_notes" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Notes:"
+                    android:text="@string/_notes"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <EditText
@@ -190,6 +212,8 @@
                     android:inputType="textPersonName" />
 
             </LinearLayout>
+
+            <!--Layout for selected notes-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -204,6 +228,8 @@
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </LinearLayout>
+
+            <!--Layout for selecting a place-->
 
             <fragment
                 android:id="@+id/place_autocomplete_fragment"
@@ -224,6 +250,8 @@
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
 
+            <!--Layout for nice job text-->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -233,13 +261,15 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Nice Job! Now Create the Meeting! "
+                    android:text="@string/nice_job"
                     android:paddingTop="10dp"
                     android:textColor="@android:color/holo_blue_dark"
                     android:textSize="15sp"
                     android:gravity="center"/>
 
             </LinearLayout>
+
+            <!--Layout for creating a meeting button-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -251,10 +281,12 @@
                     android:id="@+id/btnCreateMeeting"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Create Meeting"
+                    android:text="@string/create_meeting"
                     />
 
         </LinearLayout>
+
+            <!--Layout for editing a meeting-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -265,7 +297,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Want to edit a Meeting? "
+                    android:text="@string/edit_meeting"
                     android:paddingTop="10dp"
                     android:textColor="@android:color/holo_blue_dark"
                     android:textSize="18sp"
@@ -274,13 +306,15 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Click Load Meetings to Find Your Meetings Unique ID "
+                    android:text="@string/load_meeting"
                     android:textColor="@android:color/holo_blue_dark"
                     android:textSize="12sp"
                     android:gravity="center"/>
 
 
             </LinearLayout>
+
+            <!--Layout for editing a meeting by ID-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -293,17 +327,19 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:id="@+id/editMeeting"
-                    android:hint="Enter Meeting ID to Edit Here" />
+                    android:hint="@string/enterid_meeting" />
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Perform Edits to Meeting"
+                    android:text="@string/performedit_meeting"
                     android:layout_marginTop="10dp"
                     android:id="@+id/btnEditMeetings"/>
 
             </LinearLayout>
+
+            <!--Layout for deleting a meeting-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -314,7 +350,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Want to Delete an Item? Enter the Meeting ID Below "
+                    android:text="@string/wantto_delete"
                     android:paddingTop="10dp"
                     android:textColor="@android:color/holo_blue_dark"
                     android:textSize="12sp"
@@ -325,13 +361,13 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:id="@+id/deleteMeeting"
-                    android:hint="Enter Meeting ID to Delete Here" />
+                    android:hint="@string/enterdelete_meeting" />
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Delete Meeting"
+                    android:text="@string/delete_meeting"
                     android:layout_marginTop="10dp"
                     android:id="@+id/btnDeleteMeetings"/>
 
@@ -339,6 +375,8 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <!--Side menu-->
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
